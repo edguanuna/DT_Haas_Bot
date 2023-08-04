@@ -19,7 +19,6 @@ app.post('/', (req, res) => {
     console.log(req.body)
     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
     initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-    res.send("Got the response")
 })
 
 
@@ -54,19 +53,10 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     await checkoutScreen(page, eventName, phoneNumber)
 
     //Seal the deal.
-    await page.waitForSelector('.btn-success');
-    const successBtn = await page.$('.btn-success')
-    await page.evaluate((successBtn) => successBtn.click(), successBtn)
-    await new Promise(r => setTimeout(r, 50));
-    await page.evaluate((successBtn) => successBtn.click(), successBtn)
-    await new Promise(r => setTimeout(r, 500));
-    const success = await page.$('.btn-success')
-    if (!success) {
-        console.log("Finish the job.")
-    } else {
-        console.log("Yo we gottem baby")
-    }
-
+    // await new Promise(r => setTimeout(r, 5000));
+    // await page.waitForSelector('.btn-success');
+    // const successBtn = await page.$('.btn-success')
+    // await page.evaluate((successBtn) => successBtn.click(), successBtn)
 }
 
 async function loginScreen(page, username, password) {
@@ -154,7 +144,9 @@ async function checkoutScreen(page, eventName, phoneNumber) {
     await page.waitForSelector('.btn-success');
     const searchButton = await page.$('.btn-success')
     await page.evaluate((searchButton) => searchButton.click(), searchButton)
-
     await page.keyboard.type(phoneNumber)
+    await new Promise(r => setTimeout(r, 2000));
+
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
     // //Seal the deal
 }

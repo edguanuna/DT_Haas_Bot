@@ -8,8 +8,8 @@ export default function Form() {
     const { register, handleSubmit } = useForm()
     const [message, setMessage] = useState("")
 
-    // const backendUrl = "https://diversa-haas-bot.up.railway.app/"
-    const backendUrl = 'http://localhost:5000/'
+    const backendUrl = "https://diversa-haas-bot.up.railway.app/"
+    // const backendUrl = 'http://localhost:5000/'
 
     const onSubmit = async (data) => {
         console.log(data)
