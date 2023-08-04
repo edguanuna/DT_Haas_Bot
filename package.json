@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "npm run dev & node app/api.cjs",
     "lint": "next lint"
   },
   "dependencies": {
