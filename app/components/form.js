@@ -6,12 +6,12 @@ import InputMask from 'react-input-mask';
 
 export default function Form() {
     const { register, handleSubmit } = useForm()
-    const [message, setMessage] = useState("HUFNDOO")
+    const [message, setMessage] = useState("")
 
 
     const onSubmit = async (data) => {
         console.log(data)
-        const response = await fetch('http://localhost:3001/api', {
+        const response = await fetch('http://localhost:5000/api', {
             method: 'POST',
             // mode: "no-cors",
             headers: {

@@ -2,13 +2,14 @@ const puppeteer = require('puppeteer')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const port = process.env.PORT || 5000
 
 app.use(express.json())
 app.use(cors({
     origin: "http://localhost:3000"
 }))
 
-app.listen(3001, () => { console.log('Server is running on port 3001') });
+app.listen(port, () => { console.log(`Server is running on port ${port}`) });
 
 app.post('/api', (req, res) => {
     console.log(req.body)
@@ -47,7 +48,7 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     //Seal the deal.
     await page.waitForSelector('.btn-success');
     const searchButton = await page.$('.btn-success')
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    // await page.evaluate((searchButton) => searchButton.click(), searchButton)
 
 }
 
