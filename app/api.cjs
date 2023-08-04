@@ -15,11 +15,23 @@ app.get('/', function (req, res) {
     res.send('Hello World!')
   })
 
-app.post('/', (req, res) => {
-    console.log(req.body)
+// app.post('/', (req, res) => {
+//     console.log(req.body.username)
+//     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
+//     initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+// })
+
+app.post('/', async (req, res) => {
+    console.log(req.body.username)
     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
-    initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-})
+    try {
+        await initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+        res.status(200).send('OK');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 const signInUrl = "https://ems.haas.berkeley.edu/emswebapp/Default.aspx?data=5BtDNigiZmYcBDtEfk61NA%3d%3d"
@@ -52,12 +64,6 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     await selectRoom(page, roomNumber)
     console.log("checkoutScreen()")
     await checkoutScreen(page, eventName, phoneNumber)
-
-    //Seal the deal.
-    // await new Promise(r => setTimeout(r, 5000));
-    // await page.waitForSelector('.btn-success');
-    // const successBtn = await page.$('.btn-success')
-    // await page.evaluate((successBtn) => successBtn.click(), successBtn)
 }
 
 async function loginScreen(page, username, password) {
@@ -151,6 +157,12 @@ async function checkoutScreen(page, eventName, phoneNumber) {
     await page.keyboard.press('Enter')
     await page.keyboard.press('Enter')
 
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
     await new Promise(r => setTimeout(r, 100));
     await page.evaluate((searchButton) => searchButton.click(), searchButton)
     await new Promise(r => setTimeout(r, 100));
