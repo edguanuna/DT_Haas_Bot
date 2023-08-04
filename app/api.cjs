@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
     res.send('Hello World!')
   })
 
-app.post('/api', (req, res) => {
+app.post('/', (req, res) => {
     console.log(req.body)
     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
     initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
