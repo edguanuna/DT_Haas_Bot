@@ -149,28 +149,12 @@ async function checkoutScreen(page, eventName, phoneNumber) {
     await page.evaluate((searchButton) => searchButton.click(), searchButton)
 
     await page.keyboard.type(phoneNumber)
-    page.waitForNavigation({ waitUntil: 'networkidle0' })
-    await page.focus("button.btn-success")
-    page.waitForNavigation({ waitUntil: 'networkidle0' })
-    await page.keyboard.press('Enter')
-    await page.keyboard.press('Enter')
-    await page.keyboard.press('Enter')
-    await page.keyboard.press('Enter')
 
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 200));
     await page.evaluate((searchButton) => searchButton.click(), searchButton)
     await new Promise(r => setTimeout(r, 100));
     await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+
 
 
     // //Fill out phone number
