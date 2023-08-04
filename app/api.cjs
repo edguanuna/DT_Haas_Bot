@@ -44,15 +44,28 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     const page = await browser.newPage();
     await page.goto(signInUrl);
 
+    console.log("loginScreen()")
     await loginScreen(page, username, password)
+    console.log("runSearch()")
     await runSearch(page, date, startTime, endTime)
+    console.log("selectRoom()")
     await selectRoom(page, roomNumber)
+    console.log("checkoutScreen()")
     await checkoutScreen(page, eventName, phoneNumber)
 
     //Seal the deal.
     await page.waitForSelector('.btn-success');
-    const searchButton = await page.$('.btn-success')
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    const successBtn = await page.$('.btn-success')
+    await page.evaluate((successBtn) => successBtn.click(), successBtn)
+    await new Promise(r => setTimeout(r, 50));
+    await page.evaluate((successBtn) => successBtn.click(), successBtn)
+    await new Promise(r => setTimeout(r, 500));
+    const success = await page.$('.btn-success')
+    if (!success) {
+        console.log("Finish the job.")
+    } else {
+        console.log("Yo we gottem baby")
+    }
 
 }
 
