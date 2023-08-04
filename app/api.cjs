@@ -40,7 +40,7 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     startTime = startTime + " " + timeOfDay
 
     // const browser = await puppeteer.launch({headless: false});
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: "new"});
     const page = await browser.newPage();
     await page.goto(signInUrl);
 
