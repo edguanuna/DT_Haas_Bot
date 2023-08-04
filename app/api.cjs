@@ -137,16 +137,38 @@ async function selectRoom(page, roomNumber) {
 async function checkoutScreen(page, eventName, phoneNumber) {
     await page.keyboard.type(eventName)
     await new Promise(r => setTimeout(r, 100));
+    await page.waitForSelector('.btn-success');
+    const searchButton = await page.$('.btn-success')
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+
+    await page.keyboard.type(phoneNumber)
+    page.waitForNavigation({ waitUntil: 'networkidle0' })
+    await page.focus("button.btn-success")
+    page.waitForNavigation({ waitUntil: 'networkidle0' })
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Enter')
+
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await new Promise(r => setTimeout(r, 100));
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+
+
     // //Fill out phone number
     // await page.waitForSelector('input[id="1stContactPhone1"]')
     // const phoneNumberInput = await page.$('input[id="1stContactPhone1"]');
     // await page.evaluate((phoneNumberInput) => phoneNumberInput.click(), phoneNumberInput)
-    await page.waitForSelector('.btn-success');
-    const searchButton = await page.$('.btn-success')
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await page.keyboard.type(phoneNumber)
-    await new Promise(r => setTimeout(r, 2000));
-
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
     // //Seal the deal
+    // const boundingBox = await searchButton.boundingBox();
+    // const centerX = boundingBox.x + boundingBox.width / 2;
+    // const centerY = boundingBox.y + boundingBox.height / 2;
+
+    // await page.keyboard.type(phoneNumber)
+    // await page.mouse.click(centerX, centerY);
 }
