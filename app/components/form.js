@@ -8,11 +8,11 @@ export default function Form() {
     const { register, handleSubmit } = useForm()
     const [message, setMessage] = useState("")
 
-    backendUrl = "https://diversa-haas-bot.up.railway.app/" //'http://localhost:5000/api'
+    const backendUrl = "https://diversa-haas-bot.up.railway.app/" //'http://localhost:5000/api'
 
     const onSubmit = async (data) => {
         console.log(data)
-        const response = await fetch("https://diversa-haas-bot.up.railway.app/", {
+        const response = await fetch(backendUrl, {
             method: 'POST',
             // mode: "no-cors",
             headers: {
