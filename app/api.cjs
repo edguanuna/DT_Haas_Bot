@@ -48,7 +48,7 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     //Seal the deal.
     await page.waitForSelector('.btn-success');
     const searchButton = await page.$('.btn-success')
-    // await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await page.evaluate((searchButton) => searchButton.click(), searchButton)
 
 }
 
