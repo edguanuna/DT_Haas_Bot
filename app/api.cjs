@@ -11,6 +11,10 @@ app.use(cors({
 
 app.listen(port, () => { console.log(`Server is running on port ${port}`) });
 
+app.get('/', function (req, res) {
+    res.send('Hello World!')
+  })
+
 app.post('/api', (req, res) => {
     console.log(req.body)
     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;

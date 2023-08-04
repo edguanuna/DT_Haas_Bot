@@ -1,1 +1,1 @@
-web: npm run dev & node app/api.cjs
+web: node app/api.cjs
