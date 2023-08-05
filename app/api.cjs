@@ -15,23 +15,23 @@ app.get('/', function (req, res) {
     res.send('Hello World!')
   })
 
-// app.post('/', (req, res) => {
+app.post('/', (req, res) => {
+    console.log(req.body.calNetId)
+    const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
+    initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+})
+
+// app.post('/', async (req, res) => {
 //     console.log(req.body.username)
 //     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
-//     initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-// })
-
-app.post('/', async (req, res) => {
-    console.log(req.body.username)
-    const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
-    try {
-        await initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-        res.status(200).send('OK');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('An error occurred');
-    }
-});
+//     try {
+//         await initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+//         res.status(200).send('OK');
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('An error occurred');
+//     }
+// });
 
 
 const signInUrl = "https://ems.haas.berkeley.edu/emswebapp/Default.aspx?data=5BtDNigiZmYcBDtEfk61NA%3d%3d"
@@ -64,12 +64,13 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     await selectRoom(page, roomNumber)
     console.log("checkoutScreen()")
     await checkoutScreen(page, eventName, phoneNumber)
+    // await browser.close()
 }
 
 async function loginScreen(page, username, password) {
     await page.type("#userID_input", username)
     await page.type("#password_input", password)
-    await page.click("#pc_btnLogin")
+    await page.click("#pc_btnLogin"),
 
     await page.waitForSelector('a[href="#my-home"]');
     const link = await page.$('a[href="#my-home"]');
@@ -78,8 +79,11 @@ async function loginScreen(page, username, password) {
     await page.waitForSelector('.btn-xs');
     const buttons = await page.$$('.btn-xs')
     const button = buttons[0]
+    await Promise.all([
+        await page.evaluate((button) => button.click(), button),
+        await page.waitForNavigation()
 
-    await page.evaluate((button) => button.click(), button)
+    ])
 }
 
 async function runSearch(page, date, startTime, endTime) {
@@ -88,41 +92,41 @@ async function runSearch(page, date, startTime, endTime) {
     const startTimeInput = await page.$('input[id="start-time-input"]');
     const endTimeInput = await page.$('input[id="end-time-input"]');
 
-    //Clear date field
-    await page.evaluate((dateInput) => dateInput.click(), dateInput)
-    await new Promise(r => setTimeout(r, 400));
-    await page.type("#booking-date-input", "no")
-    await new Promise(r => setTimeout(r, 50));
+    // //Clear date field
+    await page.evaluate((dateInput) => dateInput.click(), dateInput),
+    await new Promise(r => setTimeout(r, 300));
+    await page.type("#booking-date-input", " ")
+    // await new Promise(r => setTimeout(r, 10));
     for (let i=0; i<16; i++) {
         await page.keyboard.press('Backspace')
     }
     await page.keyboard.type(date)
-    // await new Promise(r => setTimeout(r, 50));
-    // await page.type("#booking-date-input", "Thu 08/10/2023")
-
     //Clear start time field
     await page.evaluate((startTimeInput) => startTimeInput.click(), startTimeInput)
-    await new Promise(r => setTimeout(r, 300));
-    await page.type("#start-time-input", "")
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 200));
+    await page.type("#start-time-input", " ")
+    // await new Promise(r => setTimeout(r, 10));
     for (let i=0; i<9; i++) {
         await page.keyboard.press('Backspace')
     }
     await page.type("#start-time-input", startTime)
-    //Clear end time field
+    // //Clear end time field
     await page.evaluate((endTimeInput) => endTimeInput.click(), endTimeInput)
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 200));
     await page.type("#end-time-input", "")
-    await new Promise(r => setTimeout(r, 100));
+    // await new Promise(r => setTimeout(r, 10));
     for (let i=0; i<9; i++) {
         await page.keyboard.press('Backspace')
     }
     await page.type("#end-time-input", endTime)
-    //HIt that search button
-    await page.waitForSelector('.find-a-room.btn-primary');
+    // //HIt that search button
     const searchButtons = await page.$$('.find-a-room.btn-primary')
     const searchButton = searchButtons[0]
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    await Promise.all([
+        page.evaluate((searchButton) => searchButton.click(), searchButton),
+        await page.waitForSelector('div[data-room-id="345"]')
+    ])
+    // await page.screenshot({path: "screenshots/end.png", fullPage: "true"})
 }
 
 async function selectRoom(page, roomNumber) {
@@ -136,36 +140,43 @@ async function selectRoom(page, roomNumber) {
     const details = await page.$('a[href="#details"]');
     await page.evaluate((details) => details.click(), details);
 
-    await page.waitForSelector('.btn-success');
-    const searchButton = await page.$('.btn-success')
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    // await page.waitForSelector('.btn-success');
+    // const searchButton = await page.$('.btn-success')
+    // await Promise.all([
+    //     await page.waitForSelector('div[data-room-id="345"]:not(.visible)'),
+    //     await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    // ])
+    await new Promise(r => setTimeout(r, 100));
 }
 
 async function checkoutScreen(page, eventName, phoneNumber) {
-    await page.keyboard.type(eventName)
-    await new Promise(r => setTimeout(r, 100));
-    await page.waitForSelector('.btn-success');
-    const searchButton = await page.$('.btn-success')
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
 
-    await page.keyboard.type(phoneNumber)
+    await page.type("#event-name", eventName)
+    await page.type('input[id="1stContactPhone1"]', phoneNumber)
+    const final = await page.waitForSelector('#help-text-body-content')
+    console.log(final)
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Tab")
+    await page.keyboard.press("Enter")
+    await new Promise(r => setTimeout(r, 500));
+    await page.keyboard.press("Enter")
+    await new Promise(r => setTimeout(r, 5000));
 
-    await new Promise(r => setTimeout(r, 200));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
-    await new Promise(r => setTimeout(r, 100));
-    await page.evaluate((searchButton) => searchButton.click(), searchButton)
+    endPage = await page.$('#help-text-body-content');
+    isVisible = await endPage.isVisible()
+    console.log(isVisible)
 
+    await page.screenshot({path: "screenshots/end.png", fullPage: "true"})
+    // await page.waitForSelector('.btn-success');
+    // const searchButton = await page.$('.btn-success')
+    // await page.evaluate((searchButton) => searchButton.click(), searchButton)
 
 
     // //Fill out phone number
     // await page.waitForSelector('input[id="1stContactPhone1"]')
     // const phoneNumberInput = await page.$('input[id="1stContactPhone1"]');
     // await page.evaluate((phoneNumberInput) => phoneNumberInput.click(), phoneNumberInput)
-    // //Seal the deal
-    // const boundingBox = await searchButton.boundingBox();
-    // const centerX = boundingBox.x + boundingBox.width / 2;
-    // const centerY = boundingBox.y + boundingBox.height / 2;
-
-    // await page.keyboard.type(phoneNumber)
-    // await page.mouse.click(centerX, centerY);
 }

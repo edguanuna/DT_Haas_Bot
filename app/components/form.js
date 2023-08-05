@@ -2,14 +2,14 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InputMask from 'react-input-mask';
-
+import 'dotenv/config'
 
 export default function Form() {
     const { register, handleSubmit } = useForm()
     const [message, setMessage] = useState("")
 
-    const backendUrl = "https://diversa-haas-bot.up.railway.app/"
-    // const backendUrl = 'http://localhost:5000/'
+    // const backendUrl = "https://diversa-haas-bot.up.railway.app/"
+    const backendUrl = 'http://localhost:5000/'
 
     const onSubmit = async (data) => {
         console.log(data)
@@ -80,16 +80,17 @@ export default function Form() {
                         </select>
                     </div>
                     <div className="mb-4">
-                    <input {...register("eventName")} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Event Name: DiversaTech"/>
+                    <input {...register("eventName")} defaultValue={"Testing"} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Event Name: DiversaTech"/>
+                    </div>
+                    <div className="mb-4">  
+                    {/* GET RID OF DEFAULT */}
+                    <input {...register("phoneNumber")} defaultValue={process.env.DEFAULT_PHONE} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Phone Number: (can be fake)"/>
                     </div>
                     <div className="mb-4">
-                    <input {...register("phoneNumber")} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Phone Number:"/>
+                    <input {...register("calNetId")} defaultValue={process.env.DEFAULT_USER} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Cal Net ID:"/>
                     </div>
                     <div className="mb-4">
-                    <input {...register("calNetId")} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Cal Net ID:"/>
-                    </div>
-                    <div className="mb-4">
-                    <input type="password" {...register("password")} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password:"/>
+                    <input type="password" {...register("password")} defaultValue={process.env.DEFAULT_PASS} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password:"/>
                     </div>
                     <div className="flex items-center justify-between">
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
