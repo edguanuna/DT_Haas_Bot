@@ -15,23 +15,23 @@ app.get('/', function (req, res) {
     res.send('Hello World!')
   })
 
-app.post('/', (req, res) => {
-    console.log(req.body.calNetId)
-    const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
-    initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-})
-
-// app.post('/', async (req, res) => {
-//     console.log(req.body.username)
+// app.post('/', (req, res) => {
+//     console.log(req.body.calNetId)
 //     const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
-//     try {
-//         await initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
-//         res.status(200).send('OK');
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('An error occurred');
-//     }
-// });
+//     initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+// })
+
+app.post('/', async (req, res) => {
+    console.log(req.body.username)
+    const { date, startTime, timeOfDay, duration, roomNumber, eventName, phoneNumber, calNetId, password } = req.body;
+    try {
+        await initBrowser(calNetId, password, date, startTime, timeOfDay, duration, eventName, phoneNumber, roomNumber)
+        res.status(200).send('OK');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 const signInUrl = "https://ems.haas.berkeley.edu/emswebapp/Default.aspx?data=5BtDNigiZmYcBDtEfk61NA%3d%3d"
@@ -51,8 +51,8 @@ async function initBrowser(username, password, date, startTime, timeOfDay, durat
     const endTime = addMinutes(startTime, duration) + timeOfDay 
     startTime = startTime + " " + timeOfDay
 
-    // const browser = await puppeteer.launch({headless: false});
-    const browser = await puppeteer.launch({headless: "new", args: ['--no-sandbox']});
+    const browser = await puppeteer.launch({headless: false});
+    // const browser = await puppeteer.launch({headless: "new", args: ['--no-sandbox']});
     const page = await browser.newPage();
     await page.goto(signInUrl);
 
@@ -160,23 +160,14 @@ async function checkoutScreen(page, eventName, phoneNumber) {
     await page.keyboard.press("Tab")
     await page.keyboard.press("Tab")
     await page.keyboard.press("Tab")
-    await page.keyboard.press("Enter")
-    await new Promise(r => setTimeout(r, 500));
-    await page.keyboard.press("Enter")
-    await new Promise(r => setTimeout(r, 5000));
+    // await page.keyboard.press("Enter")
+    // await new Promise(r => setTimeout(r, 500));
+    // await page.keyboard.press("Enter")
+    // await new Promise(r => setTimeout(r, 5000));
 
     endPage = await page.$('#help-text-body-content');
     isVisible = await endPage.isVisible()
     console.log(isVisible)
 
-    await page.screenshot({path: "screenshots/end.png", fullPage: "true"})
-    // await page.waitForSelector('.btn-success');
-    // const searchButton = await page.$('.btn-success')
-    // await page.evaluate((searchButton) => searchButton.click(), searchButton)
-
-
-    // //Fill out phone number
-    // await page.waitForSelector('input[id="1stContactPhone1"]')
-    // const phoneNumberInput = await page.$('input[id="1stContactPhone1"]');
-    // await page.evaluate((phoneNumberInput) => phoneNumberInput.click(), phoneNumberInput)
+    // await page.screenshot({path: "screenshots/end.png", fullPage: "true"})
 }
