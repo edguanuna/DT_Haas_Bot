@@ -2,6 +2,11 @@ const puppeteer = require('puppeteer')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+
+const http = require('http')
+const server = http.createServer(app)
+const { Server } = require("socket.io")
+const io = new Server(server)
 const port = process.env.PORT || 5000
 
 app.use(express.json())
